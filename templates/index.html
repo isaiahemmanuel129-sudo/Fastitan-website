@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FastTitan — Delivery, at the speed of now</title>
+<meta name="description" content="FastTitan moves food, groceries, parcels, medicine and documents across Nigeria's cities in minutes, not hours." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: { DEFAULT: '#FF5A3D', soft: '#FF7A59' },
+        bg: { DEFAULT: '#0B0B0D', surface: '#15161A', card: '#1D1F24' },
+        ink: { DEFAULT: '#FFFFFF', muted: '#B7BDC8' },
+        success: '#22C55E'
+      },
+      fontFamily: { sans: ['Poppins','sans-serif'] },
+      borderRadius: { xl2: '1.25rem', xl3: '1.75rem' },
+      boxShadow: {
+        soft: '0 1px 2px rgba(0,0,0,.4), 0 8px 24px -8px rgba(0,0,0,.5)',
+        card: '0 1px 0 rgba(255,255,255,.04) inset, 0 8px 30px -12px rgba(0,0,0,.6)',
+        lift: '0 20px 40px -12px rgba(255,90,61,.3)'
+      },
+      keyframes: {
+        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-14px)' } },
+        marquee: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } }
+      },
+      animation: {
+        float: 'float 6s ease-in-out infinite',
+        marquee: 'marquee 28s linear infinite'
+      }
+    }
+  }
+};
+</script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { background:#0B0B0D; }
+  body { font-family:'Poppins',sans-serif; -webkit-font-smoothing:antialiased; }
+  ::selection { background:#FF5A3D; color:#fff; }
+  ::-webkit-scrollbar{ width:10px; }
+  ::-webkit-scrollbar-track{ background:#0B0B0D; }
+  ::-webkit-scrollbar-thumb{ background:#2a2b30; border-radius:8px; }
+
+  .container-ft{ max-width:1280px; margin-inline:auto; padding-inline:clamp(1.25rem,4vw,3rem); }
+  .section-pad{ padding-block:clamp(4.5rem,9vw,8rem); }
+  .section-pad-sm{ padding-block:clamp(3rem,6vw,5rem); }
+
+  .h1{ font-size:clamp(2.75rem,6vw,5.5rem); font-weight:800; letter-spacing:-0.035em; line-height:1.02; }
+  .h2{ font-size:clamp(2.25rem,4.2vw,3.75rem); font-weight:700; letter-spacing:-0.03em; line-height:1.05; }
+  .h3{ font-size:clamp(1.5rem,2.4vw,2.1rem); font-weight:600; letter-spacing:-0.02em; line-height:1.15; }
+  .body-lg{ font-size:clamp(1.0625rem,1.4vw,1.25rem); line-height:1.6; color:#B7BDC8; }
+  .eyebrow{ font-size:.75rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#FF7A59; }
+
+  .route-rule{ height:1px; width:100%; background-image:linear-gradient(to right, rgba(255,255,255,.08) 50%, transparent 50%); background-size:12px 1px; }
+  .route-underline{ position:relative; display:inline-block; }
+  .route-underline::after{ content:""; position:absolute; left:0; right:0; bottom:-.3em; height:3px; border-radius:2px;
+    background-image:linear-gradient(to right, #FF5A3D 0 8px, transparent 8px 14px); background-size:14px 3px; background-repeat:repeat-x; }
+
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font-weight:600; font-size:.95rem; border-radius:9999px; padding:.9rem 1.85rem; transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s cubic-bezier(.16,1,.3,1), background-color .25s ease, border-color .25s ease; white-space:nowrap; }
+  .btn-primary{ background:linear-gradient(135deg,#FF5A3D 0%,#FF7A59 100%); color:#fff; box-shadow:0 1px 1px rgba(255,255,255,.15) inset, 0 12px 24px -8px rgba(255,90,61,.45); }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 1px 1px rgba(255,255,255,.2) inset, 0 18px 32px -8px rgba(255,90,61,.55); }
+  .btn-secondary{ background:rgba(255,255,255,.04); color:#fff; border:1px solid rgba(255,255,255,.1); backdrop-filter:blur(6px); }
+  .btn-secondary:hover{ transform:translateY(-2px); background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18); }
+  .btn:focus-visible{ outline:2px solid #FF7A59; outline-offset:3px; }
+  .btn-sm{ padding:.6rem 1.2rem; font-size:.85rem; }
+
+  .store-badge{ display:flex; align-items:center; gap:.6rem; padding:.6rem 1rem; border-radius:.85rem; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); transition:background-color .25s ease, transform .25s ease; }
+  .store-badge:hover{ background:rgba(255,255,255,.1); transform:translateY(-2px); }
+
+  .card{ background:#1D1F24; border:1px solid rgba(255,255,255,.08); border-radius:1.25rem; box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 8px 30px -14px rgba(0,0,0,.7); transition:transform .4s cubic-bezier(.16,1,.3,1), border-color .4s ease, box-shadow .4s ease; }
+  .card-hover:hover{ transform:translateY(-6px); border-color:rgba(255,90,61,.35); box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 24px 48px -18px rgba(255,90,61,.25); }
+  .glass{ background:rgba(21,22,26,.6); backdrop-filter:blur(20px) saturate(140%); border:1px solid rgba(255,255,255,.08); }
+
+  .img-zoom{ overflow:hidden; }
+  .img-zoom img{ transition:transform 1.1s cubic-bezier(.16,1,.3,1); }
+  .img-zoom:hover img{ transform:scale(1.06); }
+
+  .nav-blur{ background:rgba(11,11,13,0); border-bottom:1px solid transparent; transition:background-color .4s ease, border-color .4s ease, backdrop-filter .4s ease; }
+  .nav-blur.is-scrolled{ background:rgba(11,11,13,.75); backdrop-filter:blur(16px) saturate(160%); border-bottom-color:rgba(255,255,255,.08); }
+
+  [data-reveal]{ opacity:0; transform:translateY(28px); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
+  [data-reveal].is-visible{ opacity:1; transform:translateY(0); }
+  [data-reveal-delay="1"]{ transition-delay:.08s; } [data-reveal-delay="2"]{ transition-delay:.16s; }
+  [data-reveal-delay="3"]{ transition-delay:.24s; } [data-reveal-delay="4"]{ transition-delay:.32s; }
+
+  .hero-glow{ background:
+    radial-gradient(38% 45% at 82% 10%, rgba(255,90,61,.22) 0%, rgba(11,11,13,0) 70%),
+    radial-gradient(30% 40% at 6% 85%, rgba(255,122,89,.12) 0%, rgba(11,11,13,0) 70%); }
+
+  .grain-radial{ background: radial-gradient(60% 60% at 50% 0%, rgba(255,90,61,.14) 0%, rgba(11,11,13,0) 70%); }
+
+  .marquee-track{ animation:marquee 28s linear infinite; }
+  .marquee-wrap:hover .marquee-track{ animation-play-state:paused; }
+
+  .faq-item[data-open="true"] .faq-icon{ transform:rotate(45deg); }
+  .faq-item[data-open="true"] .faq-panel{ grid-template-rows:1fr; opacity:1; }
+  .faq-panel{ display:grid; grid-template-rows:0fr; opacity:0; transition:grid-template-rows .4s cubic-bezier(.16,1,.3,1), opacity .3s ease; }
+  .faq-panel > div{ overflow:hidden; }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+    [data-reveal]{ opacity:1; transform:none; }
+  }
+</style>
+</head>
+<body class="bg-bg text-ink antialiased">
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<header id="nav" class="nav-blur fixed top-0 inset-x-0 z-50">
+  <nav class="container-ft flex items-center justify-between h-[76px]">
+    <a href="#" class="flex items-center gap-2.5">
+      <span class="relative w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-soft flex items-center justify-center shadow-soft">
+        <i data-lucide="zap" class="w-4 h-4 text-white"></i>
+        <span class="absolute -right-0.5 -bottom-0.5 w-2 h-2 rounded-full bg-success ring-2 ring-bg"></span>
+      </span>
+      <span class="text-[1.05rem] font-semibold tracking-tight">FastTitan</span>
+    </a>
+
+    <div class="hidden lg:flex items-center gap-1">
+      <a href="#services" class="px-4 py-2.5 rounded-full text-sm text-ink-muted hover:text-ink hover:bg-white/[.04] transition-colors">Services</a>
+      <a href="#about" class="px-4 py-2.5 rounded-full text-sm text-ink-muted hover:text-ink hover:bg-white/[.04] transition-colors">About</a>
+      <a href="#business" class="px-4 py-2.5 rounded-full text-sm text-ink-muted hover:text-ink hover:bg-white/[.04] transition-colors">Business</a>
+      <a href="#rider" class="px-4 py-2.5 rounded-full text-sm text-ink-muted hover:text-ink hover:bg-white/[.04] transition-colors">Become a Rider</a>
+      <a href="#faq" class="px-4 py-2.5 rounded-full text-sm text-ink-muted hover:text-ink hover:bg-white/[.04] transition-colors">FAQ</a>
+    </div>
+
+    <div class="hidden lg:flex items-center gap-3">
+      <a href="#" class="text-sm text-ink-muted hover:text-ink transition-colors">Log in</a>
+      <a href="#app" class="btn btn-primary text-sm">Get the app</a>
+    </div>
+
+    <button id="menuToggle" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/[.06]" aria-label="Toggle menu">
+      <i data-lucide="menu" class="w-5 h-5"></i>
+    </button>
+  </nav>
+
+  <div id="mobileMenu" class="hidden lg:hidden border-t border-white/[.08] bg-bg/95 backdrop-blur-xl">
+    <div class="container-ft py-6 flex flex-col gap-1">
+      <a href="#services" class="py-3 text-sm text-ink-muted hover:text-ink">Services</a>
+      <a href="#about" class="py-3 text-sm text-ink-muted hover:text-ink">About</a>
+      <a href="#business" class="py-3 text-sm text-ink-muted hover:text-ink">Business</a>
+      <a href="#rider" class="py-3 text-sm text-ink-muted hover:text-ink">Become a Rider</a>
+      <a href="#faq" class="py-3 text-sm text-ink-muted hover:text-ink">FAQ</a>
+      <div class="route-rule my-3"></div>
+      <a href="#" class="py-3 text-sm text-ink-muted hover:text-ink">Log in</a>
+      <a href="#app" class="btn btn-primary text-sm mt-2 w-full">Get the app</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="relative overflow-hidden hero-glow">
+  <div class="container-ft pt-32 pb-24 lg:pt-40 lg:pb-32">
+    <div class="grid lg:grid-cols-12 gap-y-16 gap-x-8 items-start">
+
+      <div class="lg:col-span-5 lg:pt-10" data-reveal>
+        <div class="flex items-center gap-2 mb-6">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+          </span>
+          <p class="eyebrow">Live across 4 cities</p>
+        </div>
+
+        <h1 class="h1">Same-day delivery, <span class="route-underline text-primary">done properly.</span></h1>
+
+        <p class="body-lg mt-7 max-w-md">FastTitan is Nigeria's premium logistics platform for food, groceries, parcels, medicine and business freight — one app, verified riders, live tracking on every order.</p>
+
+        <div class="flex flex-wrap items-center gap-4 mt-10">
+          <a href="#app" class="btn btn-primary">Order a delivery <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+          <a href="#rider" class="btn btn-secondary"><i data-lucide="bike" class="w-4 h-4"></i> Become a rider</a>
+        </div>
+
+        <div class="flex flex-wrap gap-3 mt-6">
+          <a href="#app" class="store-badge">
+            <i data-lucide="apple" class="w-6 h-6"></i>
+            <span class="text-left leading-tight"><span class="block text-[10px] text-ink-muted">Download on the</span><span class="block text-sm font-semibold -mt-0.5">App Store</span></span>
+          </a>
+          <a href="#app" class="store-badge">
+            <i data-lucide="play" class="w-5 h-5"></i>
+            <span class="text-left leading-tight"><span class="block text-[10px] text-ink-muted">Get it on</span><span class="block text-sm font-semibold -mt-0.5">Google Play</span></span>
+          </a>
+        </div>
+
+        <div class="flex items-center gap-5 mt-10 pt-8 border-t border-white/[.08]">
+          <div class="flex -space-x-3">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64&h=64&fit=crop&crop=faces" alt="" class="w-9 h-9 rounded-full border-2 border-bg object-cover" />
+            <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop&crop=faces" alt="" class="w-9 h-9 rounded-full border-2 border-bg object-cover" />
+            <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=64&h=64&fit=crop&crop=faces" alt="" class="w-9 h-9 rounded-full border-2 border-bg object-cover" />
+          </div>
+          <p class="text-sm text-ink-muted"><span class="text-ink font-semibold">40,000+</span> deliveries this week</p>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 relative" data-reveal data-reveal-delay="1">
+        <div class="relative ml-auto w-full max-w-[560px] lg:mr-[-2rem]">
+          <div class="rounded-xl3 overflow-hidden border border-white/[.08] shadow-card aspect-[4/5] relative group img-zoom">
+            <img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=900&h=1125&fit=crop" alt="FastTitan rider on a delivery run through the city" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-primary/10 mix-blend-multiply"></div>
+          </div>
+
+          <div class="card glass absolute -top-6 -right-6 lg:-right-10 w-[176px] p-4 animate-float">
+            <p class="text-xs text-ink-muted mb-1">Avg. delivery time</p>
+            <p class="h3 text-2xl"><span data-counter="23" data-suffix=" min">0</span></p>
+            <div class="route-rule mt-3"></div>
+          </div>
+
+          <div class="absolute -bottom-14 -left-8 lg:-left-16 w-[150px] animate-float" style="animation-delay:1.2s">
+            <div class="rounded-[1.75rem] border border-white/[.08] bg-bg-card shadow-card p-2">
+              <div class="rounded-[1.25rem] overflow-hidden bg-bg-surface">
+                <div class="px-3 pt-3 pb-2 flex items-center justify-between">
+                  <span class="text-[9px] text-ink-muted">09:41</span>
+                  <i data-lucide="signal" class="w-2.5 h-2.5 text-ink-muted"></i>
+                </div>
+                <div class="px-3 pb-3">
+                  <p class="text-[10px] text-ink-muted mb-2">Order en route</p>
+                  <div class="rounded-xl bg-bg-card p-2.5 mb-2">
+                    <div class="flex items-center gap-1.5 mb-1.5">
+                      <i data-lucide="bike" class="w-3 h-3 text-primary"></i>
+                      <span class="text-[9px] font-medium">Tunde is 2 stops away</span>
+                    </div>
+                    <div class="h-1 rounded-full bg-white/10 overflow-hidden">
+                      <div class="h-full w-2/3 rounded-full bg-gradient-to-r from-primary to-primary-soft"></div>
+                    </div>
+                  </div>
+                  <div class="rounded-xl bg-bg-card p-2.5 flex items-center gap-1.5">
+                    <i data-lucide="map-pin" class="w-3 h-3 text-success"></i>
+                    <span class="text-[9px]">Arriving in 6 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-ft"><div class="route-rule"></div></div>
+</section>
+
+<!-- ============================================================
+     TRUSTED BY + STATS
+     ============================================================ -->
+<section class="py-16 border-b border-white/[.08]">
+  <div class="container-ft" data-reveal>
+    <p class="text-center text-xs text-ink-muted tracking-widest uppercase mb-10">Trusted by teams shipping every day</p>
+  </div>
+  <div class="marquee-wrap overflow-hidden">
+    <div class="flex w-max marquee-track gap-16 items-center opacity-60">
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Kaleido Foods</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Northbridge Retail</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Lagos Fresh Market</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Verve Pharmacy</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Onyx Retail Group</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Savanna Stores</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Kaleido Foods</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Northbridge Retail</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Lagos Fresh Market</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Verve Pharmacy</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Onyx Retail Group</span>
+      <span class="text-2xl font-bold tracking-tight whitespace-nowrap">Savanna Stores</span>
+    </div>
+  </div>
+  <div class="container-ft grid grid-cols-2 md:grid-cols-4 gap-8 mt-14 text-center">
+    <div data-reveal><p class="h2 text-3xl"><span data-counter="12" data-suffix="k+">0</span></p><p class="text-sm text-ink-muted mt-1">Active riders</p></div>
+    <div data-reveal data-reveal-delay="1"><p class="h2 text-3xl"><span data-counter="98.4" data-suffix="%" data-decimals="1">0</span></p><p class="text-sm text-ink-muted mt-1">On-time rate</p></div>
+    <div data-reveal data-reveal-delay="2"><p class="h2 text-3xl"><span data-counter="4" data-suffix="">0</span></p><p class="text-sm text-ink-muted mt-1">Cities live</p></div>
+    <div data-reveal data-reveal-delay="3"><p class="h2 text-3xl"><span data-counter="2.1" data-suffix="M+" data-decimals="1">0</span></p><p class="text-sm text-ink-muted mt-1">Deliveries completed</p></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ABOUT US — story + mission
+     ============================================================ -->
+<section id="about" class="section-pad">
+  <div class="container-ft grid lg:grid-cols-2 gap-16 items-center">
+    <div class="order-2 lg:order-1" data-reveal>
+      <p class="eyebrow mb-3">Our story</p>
+      <h2 class="h2 mb-6">Built by people tired of <span class="route-underline text-primary">waiting.</span></h2>
+      <p class="body-lg mb-6">FastTitan started in 2021 with three riders and one promise: tell a customer when their order will arrive, and mean it. Today the same promise runs across four cities and every delivery category we operate.</p>
+      <p class="body-lg mb-9">We're not a courier app bolted onto a logistics network. We built the network first — verified riders, real-time routing, and a support team measured on how fast they pick up the phone.</p>
+      <div class="grid grid-cols-3 gap-6 max-w-md">
+        <div><p class="h3 text-2xl"><span data-counter="2021">0</span></p><p class="text-xs text-ink-muted mt-1">Founded</p></div>
+        <div><p class="h3 text-2xl"><span data-counter="12" data-suffix="k+">0</span></p><p class="text-xs text-ink-muted mt-1">Riders</p></div>
+        <div><p class="h3 text-2xl"><span data-counter="4">0</span></p><p class="text-xs text-ink-muted mt-1">Cities</p></div>
+      </div>
+    </div>
+    <div class="order-1 lg:order-2 relative" data-reveal data-reveal-delay="1">
+      <div class="rounded-xl3 overflow-hidden aspect-[4/5] img-zoom border border-white/[.08]">
+        <img src="https://images.unsplash.com/photo-1553413077-190983b7f9e6?w=700&h=875&fit=crop" alt="FastTitan operations team" class="w-full h-full object-cover" />
+      </div>
+      <div class="card glass p-4 absolute -bottom-6 -left-6 w-[190px] animate-float">
+        <div class="flex items-center gap-2 mb-1">
+          <i data-lucide="shield-check" class="w-4 h-4 text-success"></i>
+          <p class="text-xs font-medium">Verified since day one</p>
+        </div>
+        <p class="text-[11px] text-ink-muted">Every rider background-checked</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SERVICES — intro strip with anchor + link to full Services page
+     ============================================================ -->
+<section id="services" class="section-pad-sm bg-bg-surface border-y border-white/[.08]">
+  <div class="container-ft flex flex-col lg:flex-row lg:items-center justify-between gap-8" data-reveal>
+    <div>
+      <p class="eyebrow mb-3">What moves</p>
+      <h2 class="h2 max-w-lg">One platform. <span class="route-underline text-primary">Six ways to deliver.</span></h2>
+    </div>
+    <a href="/services" class="btn btn-secondary shrink-0">See all services <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOD DELIVERY — full-width showcase
+     ============================================================ -->
+<section id="food" class="relative">
+  <div class="grid lg:grid-cols-2 min-h-[560px]">
+    <div class="relative img-zoom" data-reveal>
+      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&h=1000&fit=crop" alt="Restaurant meal ready for delivery" class="w-full h-full object-cover absolute inset-0" />
+      <div class="absolute inset-0 bg-gradient-to-t from-bg/60 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-bg/10"></div>
+    </div>
+    <div class="flex items-center bg-bg-surface">
+      <div class="p-10 lg:p-16" data-reveal data-reveal-delay="1">
+        <p class="eyebrow mb-3">🍔 Food Delivery</p>
+        <h3 class="h2 mb-5">Hot food, from your <span class="route-underline text-primary">favourite kitchens.</span></h3>
+        <p class="body-lg mb-8 max-w-md">2,000+ restaurant partners across four cities, average delivery in 28 minutes, live tracking from kitchen to doorstep.</p>
+        <ul class="space-y-3 mb-9 text-sm text-ink-muted">
+          <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Partnered restaurants, quality-checked</li>
+          <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Insulated bags, food arrives hot</li>
+          <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Live order tracking, every trip</li>
+        </ul>
+        <a href="#app" class="btn btn-primary">Order food now <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     GROCERY DELIVERY — split, image left
+     ============================================================ -->
+<section id="grocery" class="section-pad">
+  <div class="container-ft grid lg:grid-cols-2 gap-16 items-center">
+    <div class="relative" data-reveal>
+      <div class="rounded-xl3 overflow-hidden aspect-[4/5] img-zoom border border-white/[.08]">
+        <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=700&h=875&fit=crop" alt="Fresh groceries ready for delivery" class="w-full h-full object-cover" />
+      </div>
+      <div class="card glass p-4 absolute -top-6 -right-6 w-[180px] animate-float">
+        <p class="text-xs text-ink-muted mb-1">Baskets delivered today</p>
+        <p class="h3 text-xl"><span data-counter="3480">0</span></p>
+      </div>
+    </div>
+    <div data-reveal data-reveal-delay="1">
+      <p class="eyebrow mb-3">🛒 Grocery Delivery</p>
+      <h3 class="h2 mb-5">Market-fresh, <span class="route-underline text-primary">same day.</span></h3>
+      <p class="body-lg mb-8 max-w-md">Shop from partner supermarkets and open markets, or hand a rider your list — either way, groceries arrive same-day, cold chain respected.</p>
+      <ul class="space-y-3 mb-9 text-sm text-ink-muted">
+        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Fresh produce, handled with care</li>
+        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Personal shopper option available</li>
+        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Same-day, scheduled or on-demand</li>
+      </ul>
+      <a href="#app" class="btn btn-primary">Shop groceries <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PARCEL DELIVERY — split, image right, tracking card
+     ============================================================ -->
+<section id="parcel" class="section-pad bg-bg-surface border-y border-white/[.08]">
+  <div class="container-ft grid lg:grid-cols-2 gap-16 items-center">
+    <div data-reveal>
+      <p class="eyebrow mb-3">📦 Parcel Delivery</p>
+      <h3 class="h2 mb-5">Door to door, <span class="route-underline text-primary">fully tracked.</span></h3>
+      <p class="body-lg mb-8 max-w-md">Send a document, a gift, or a pallet of stock — parcels are matched to the nearest rider instantly and tracked by GPS until signed for.</p>
+      <ul class="space-y-3 mb-9 text-sm text-ink-muted">
+        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Real-time GPS tracking</li>
+        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Photo proof of delivery</li>
+        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Same-city delivery in under 45 minutes</li>
+      </ul>
+      <a href="#app" class="btn btn-primary">Send a parcel <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+    </div>
+    <div class="relative" data-reveal data-reveal-delay="1">
+      <div class="rounded-xl3 overflow-hidden aspect-[4/5] img-zoom border border-white/[.08]">
+        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=700&h=875&fit=crop" alt="Packages ready for parcel delivery" class="w-full h-full object-cover" />
+      </div>
+      <div class="glass rounded-xl p-4 absolute -bottom-6 -left-6 w-[200px]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-medium">Parcel #FT-33021</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-success/15 text-success">Delivered</span>
+        </div>
+        <div class="h-1 rounded-full bg-white/10 overflow-hidden">
+          <div class="h-full w-full rounded-full bg-gradient-to-r from-primary to-primary-soft"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PHARMACY DELIVERY — centered, large image
+     ============================================================ -->
+<section id="pharmacy" class="section-pad">
+  <div class="container-ft">
+    <div class="max-w-xl mx-auto text-center mb-14" data-reveal>
+      <p class="eyebrow mb-3">💊 Pharmacy Delivery</p>
+      <h3 class="h2 mb-5">Medicine, delivered <span class="route-underline text-primary">discreetly.</span></h3>
+      <p class="body-lg">Prescriptions and health products from verified pharmacies, packaged securely and handled by riders trained for sensitive deliveries.</p>
+    </div>
+    <div class="relative max-w-3xl mx-auto" data-reveal data-reveal-delay="1">
+      <div class="rounded-xl3 overflow-hidden aspect-[21/9] img-zoom border border-white/[.08]">
+        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1100&h=470&fit=crop" alt="Pharmacy medicine ready for delivery" class="w-full h-full object-cover" />
+      </div>
+      <div class="card glass p-4 absolute bottom-6 left-6 right-6 md:right-auto md:w-[260px] flex items-center gap-3">
+        <i data-lucide="shield-check" class="w-5 h-5 text-success shrink-0"></i>
+        <p class="text-xs text-ink-muted">Sealed, temperature-aware packaging on every order</p>
+      </div>
+    </div>
+    <div class="text-center mt-10" data-reveal data-reveal-delay="2">
+      <a href="#app" class="btn btn-primary">Order medicine <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     DOCUMENT DELIVERY — compact split
+     ============================================================ -->
+<section id="documents" class="section-pad bg-bg-surface border-y border-white/[.08]">
+  <div class="container-ft grid lg:grid-cols-2 gap-16 items-center">
+    <div class="relative order-2 lg:order-1" data-reveal>
+      <div class="rounded-xl3 overflow-hidden aspect-[16/11] img-zoom border border-white/[.08]">
+        <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=700&h=480&fit=crop" alt="Business documents ready for courier delivery" class="w-full h-full object-cover" />
+      </div>
+    </div>
+    <div class="order-1 lg:order-2" data-reveal data-reveal-delay="1">
+      <p class="eyebrow mb-3">📄 Document Delivery</p>
+      <h3 class="h2 mb-5">Contracts, signed and <span class="route-underline text-primary">on their way.</span></h3>
+      <p class="body-lg mb-8 max-w-md">Time-sensitive paperwork picked up within the hour, hand-delivered, and confirmed the moment it's signed for — no courier office, no waiting in line.</p>
+      <a href="#app" class="btn btn-secondary">Send a document <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BUSINESS LOGISTICS — large full-width showcase
+     ============================================================ -->
+<section id="business" class="section-pad grain-radial">
+  <div class="container-ft">
+    <div class="card p-10 lg:p-16 grid lg:grid-cols-2 gap-14 items-center overflow-hidden relative" data-reveal>
+      <div class="absolute -right-24 -top-24 w-72 h-72 rounded-full bg-primary/10 blur-3xl"></div>
+      <div class="relative">
+        <p class="eyebrow mb-3">🏢 Business Logistics</p>
+        <h2 class="h2 mb-5">Logistics infrastructure, <span class="route-underline text-primary">not a courier app.</span></h2>
+        <p class="body-lg mb-8 max-w-md">Bulk scheduling, dedicated fleets, delivery analytics, and an account manager who answers the phone. Built for teams shipping hundreds of orders a day.</p>
+        <div class="grid grid-cols-2 gap-5 mb-9 max-w-sm">
+          <div><p class="h3 text-2xl"><span data-counter="500" data-suffix="+">0</span></p><p class="text-xs text-ink-muted mt-1">Business accounts</p></div>
+          <div><p class="h3 text-2xl"><span data-counter="99.4" data-suffix="%" data-decimals="1">0</span></p><p class="text-xs text-ink-muted mt-1">SLA compliance</p></div>
+        </div>
+        <a href="#" class="btn btn-primary">Talk to sales <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+      </div>
+      <div class="relative">
+        <div class="rounded-xl2 overflow-hidden aspect-[4/3] img-zoom">
+          <img src="https://images.unsplash.com/photo-1553413077-190983b7f9e6?w=700&h=525&fit=crop" alt="Business logistics warehouse operations" class="w-full h-full object-cover" />
+        </div>
+        <div class="glass rounded-xl p-4 absolute -bottom-6 -left-6 w-[200px] animate-float">
+          <p class="text-xs text-ink-muted mb-1">Orders dispatched today</p>
+          <p class="h3 text-xl"><span data-counter="1284">0</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     HOW FASTTITAN WORKS
+     ============================================================ -->
+<section class="section-pad bg-bg-surface border-y border-white/[.08]">
+  <div class="container-ft grid lg:grid-cols-2 gap-16 items-center">
+    <div data-reveal>
+      <p class="eyebrow mb-3">The mechanics</p>
+      <h2 class="h2 mb-10">How it <span class="route-underline text-primary">works</span>.</h2>
+
+      <div class="relative pl-10">
+        <div class="absolute left-[11px] top-2 bottom-2 w-px bg-white/[.08]"></div>
+
+        <div class="relative pb-10">
+          <div class="absolute left-[-40px] top-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-xs font-bold">1</div>
+          <h3 class="font-semibold mb-1.5">Request a pickup</h3>
+          <p class="text-sm text-ink-muted">Open the app, drop a pin, tell us what's moving.</p>
+        </div>
+        <div class="relative pb-10">
+          <div class="absolute left-[-40px] top-0 w-6 h-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-xs font-bold">2</div>
+          <h3 class="font-semibold mb-1.5">A rider is matched instantly</h3>
+          <p class="text-sm text-ink-muted">Our dispatch engine routes the closest verified rider — usually under 90 seconds.</p>
+        </div>
+        <div class="relative pb-10">
+          <div class="absolute left-[-40px] top-0 w-6 h-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-xs font-bold">3</div>
+          <h3 class="font-semibold mb-1.5">Track every metre</h3>
+          <p class="text-sm text-ink-muted">Live GPS, live ETA, live rider contact — no guessing.</p>
+        </div>
+        <div class="relative">
+          <div class="absolute left-[-40px] top-0 w-6 h-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-xs font-bold">4</div>
+          <h3 class="font-semibold mb-1.5">Delivered, confirmed, done</h3>
+          <p class="text-sm text-ink-muted">Photo proof of delivery lands in your app the moment it arrives.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative" data-reveal data-reveal-delay="1">
+      <div class="card p-6 max-w-[380px] mx-auto">
+        <div class="rounded-xl overflow-hidden mb-5 relative aspect-[16/10]">
+          <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=640&h=400&fit=crop" alt="Live delivery map tracking" class="w-full h-full object-cover" />
+          <div class="absolute left-4 bottom-4 right-4 glass rounded-xl p-3 flex items-center gap-2">
+            <i data-lucide="navigation" class="w-4 h-4 text-primary"></i>
+            <span class="text-xs">Rerouting for faster ETA…</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-medium">Order #FT-88214</span>
+          <span class="text-xs px-2.5 py-1 rounded-full bg-success/15 text-success">On the way</span>
+        </div>
+        <div class="h-1.5 rounded-full bg-white/10 overflow-hidden mb-2">
+          <div class="h-full w-3/4 rounded-full bg-gradient-to-r from-primary to-primary-soft"></div>
+        </div>
+        <p class="text-xs text-ink-muted">ETA 6 minutes · 1.2km away</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     WHY CHOOSE FASTTITAN — asymmetric list, not generic cards
+     ============================================================ -->
+<section class="section-pad">
+  <div class="container-ft grid lg:grid-cols-2 gap-16 items-center">
+    <div class="relative order-2 lg:order-1" data-reveal>
+      <div class="rounded-xl3 overflow-hidden aspect-[4/5] img-zoom border border-white/[.08]">
+        <img src="https://images.unsplash.com/photo-1580674285054-bed31e145f59?w=700&h=875&fit=crop" alt="FastTitan rider checking delivery app" class="w-full h-full object-cover" />
+      </div>
+    </div>
+    <div class="order-1 lg:order-2" data-reveal data-reveal-delay="1">
+      <p class="eyebrow mb-3">Why choose us</p>
+      <h2 class="h2 mb-10">Not the cheapest promise — <span class="route-underline text-primary">the kept one.</span></h2>
+      <div class="space-y-6">
+        <div class="flex gap-4">
+          <i data-lucide="zap" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+          <div><p class="font-medium mb-1">Fast delivery</p><p class="text-sm text-ink-muted">Average 28 minutes in-city, no exceptions during peak hours.</p></div>
+        </div>
+        <div class="flex gap-4">
+          <i data-lucide="map-pin" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+          <div><p class="font-medium mb-1">Real-time tracking</p><p class="text-sm text-ink-muted">Every order, live on the map, from pickup to signature.</p></div>
+        </div>
+        <div class="flex gap-4">
+          <i data-lucide="shield-check" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+          <div><p class="font-medium mb-1">Verified riders</p><p class="text-sm text-ink-muted">Background-checked, rated, and insured — every trip.</p></div>
+        </div>
+        <div class="flex gap-4">
+          <i data-lucide="wallet" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+          <div><p class="font-medium mb-1">Affordable pricing</p><p class="text-sm text-ink-muted">Transparent fares shown before you confirm, never after.</p></div>
+        </div>
+        <div class="flex gap-4">
+          <i data-lucide="headset" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+          <div><p class="font-medium mb-1">24/7 support</p><p class="text-sm text-ink-muted">A human picks up, day or night.</p></div>
+        </div>
+        <div class="flex gap-4">
+          <i data-lucide="lock" class="w-5 h-5 text-primary shrink-0 mt-0.5"></i>
+          <div><p class="font-medium mb-1">Secure deliveries</p><p class="text-sm text-ink-muted">Sealed packaging, photo proof, signature on request.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BECOME A RIDER
+     ============================================================ -->
+<section id="rider" class="section-pad bg-bg-surface border-y border-white/[.08]">
+  <div class="container-ft grid lg:grid-cols-2 gap-16 items-center">
+    <div class="relative order-2 lg:order-1" data-reveal>
+      <div class="rounded-xl2 overflow-hidden aspect-[4/5] max-w-[440px] img-zoom">
+        <img src="https://images.unsplash.com/photo-1571606424216-4d53a2984e60?w=640&h=800&fit=crop" alt="Professional FastTitan delivery rider" class="w-full h-full object-cover" />
+      </div>
+      <div class="card glass p-4 absolute top-8 -right-6 w-[168px] animate-float">
+        <p class="text-xs text-ink-muted mb-1">This week's earnings</p>
+        <p class="h3 text-xl">₦86,400</p>
+      </div>
+    </div>
+    <div class="order-1 lg:order-2" data-reveal data-reveal-delay="1">
+      <p class="eyebrow mb-3">🛵 Ride with us</p>
+      <h2 class="h2 mb-5">Your bike. Your hours. <span class="route-underline text-primary">Your earnings.</span></h2>
+      <p class="body-lg mb-8 max-w-md">Transparent per-trip pay, instant withdrawals, and weekly bonuses for riders who keep customers happy.</p>
+      <ul class="space-y-4 mb-9">
+        <li class="flex items-center gap-3 text-sm"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Weekly instant payouts, no waiting</li>
+        <li class="flex items-center gap-3 text-sm"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Free helmet, jacket, and insurance</li>
+        <li class="flex items-center gap-3 text-sm"><i data-lucide="check-circle" class="w-4 h-4 text-success shrink-0"></i> Choose your own working hours</li>
+      </ul>
+      <a href="#" class="btn btn-primary">Apply to ride <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MOBILE APP EXPERIENCE
+     ============================================================ -->
+<section id="app" class="section-pad text-center relative overflow-hidden">
+  <div class="absolute inset-0 hero-glow pointer-events-none"></div>
+  <div class="container-ft relative">
+    <p class="eyebrow mb-3" data-reveal>📱 The app</p>
+    <h2 class="h2 max-w-2xl mx-auto mb-6" data-reveal data-reveal-delay="1">Everything above, in your pocket.</h2>
+    <p class="body-lg max-w-md mx-auto mb-10" data-reveal data-reveal-delay="2">One app for every delivery — order, track, and pay without switching platforms.</p>
+
+    <div class="flex justify-center gap-3 mb-16" data-reveal data-reveal-delay="3">
+      <a href="#" class="store-badge">
+        <i data-lucide="apple" class="w-6 h-6"></i>
+        <span class="text-left leading-tight"><span class="block text-[10px] text-ink-muted">Download on the</span><span class="block text-sm font-semibold -mt-0.5">App Store</span></span>
+      </a>
+      <a href="#" class="store-badge">
+        <i data-lucide="play" class="w-5 h-5"></i>
+        <span class="text-left leading-tight"><span class="block text-[10px] text-ink-muted">Get it on</span><span class="block text-sm font-semibold -mt-0.5">Google Play</span></span>
+      </a>
+    </div>
+
+    <div class="relative max-w-[280px] mx-auto" data-reveal data-reveal-delay="4">
+      <div class="rounded-[2.5rem] border border-white/[.1] bg-bg-card shadow-card p-3">
+        <div class="rounded-[2rem] overflow-hidden aspect-[9/19.5] relative">
+          <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=860&fit=crop" alt="FastTitan mobile app tracking screen" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-primary/15 mix-blend-color"></div>
+        </div>
+      </div>
+      <div class="card glass p-3 absolute top-10 -left-16 w-[150px] hidden md:block animate-float text-left">
+        <p class="text-[11px] text-ink-muted mb-1">Delivered</p>
+        <p class="text-sm font-medium">Grocery order</p>
+      </div>
+      <div class="card glass p-3 absolute bottom-16 -right-16 w-[150px] hidden md:block animate-float text-left" style="animation-delay:1s">
+        <p class="text-[11px] text-ink-muted mb-1">Rider assigned</p>
+        <p class="text-sm font-medium">Chidi · 4.9 ★</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+     ============================================================ -->
+<section class="section-pad bg-bg-surface border-y border-white/[.08]">
+  <div class="container-ft">
+    <div class="max-w-lg mb-16" data-reveal>
+      <p class="eyebrow mb-3">Word on the street</p>
+      <h2 class="h2">What people are <span class="route-underline text-primary">saying</span>.</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card card-hover p-7" data-reveal>
+        <div class="flex gap-1 mb-4">
+          <i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i>
+        </div>
+        <p class="text-sm text-ink-muted mb-6">"Our delivery complaints dropped by 80% in the first month. Customers actually trust the ETA now."</p>
+        <div class="flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=80&h=80&fit=crop&crop=faces" class="w-9 h-9 rounded-full object-cover" alt="" />
+          <div><p class="text-sm font-medium">Amaka O.</p><p class="text-xs text-ink-muted">Owner, Kaleido Foods</p></div>
+        </div>
+      </div>
+      <div class="card card-hover p-7" data-reveal data-reveal-delay="1">
+        <div class="flex gap-1 mb-4">
+          <i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i>
+        </div>
+        <p class="text-sm text-ink-muted mb-6">"I make more per week riding for FastTitan than my last two jobs combined. Payouts are instant."</p>
+        <div class="flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces" class="w-9 h-9 rounded-full object-cover" alt="" />
+          <div><p class="text-sm font-medium">Chidi E.</p><p class="text-xs text-ink-muted">FastTitan Rider</p></div>
+        </div>
+      </div>
+      <div class="card card-hover p-7" data-reveal data-reveal-delay="2">
+        <div class="flex gap-1 mb-4">
+          <i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i><i data-lucide="star" class="w-4 h-4 text-primary fill-primary"></i>
+        </div>
+        <p class="text-sm text-ink-muted mb-6">"The business dashboard alone replaced three spreadsheets. Finance team is thrilled."</p>
+        <div class="flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=80&h=80&fit=crop&crop=faces" class="w-9 h-9 rounded-full object-cover" alt="" />
+          <div><p class="text-sm font-medium">Tunde B.</p><p class="text-xs text-ink-muted">Ops Lead, Northbridge Retail</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FAQ
+     ============================================================ -->
+<section id="faq" class="section-pad">
+  <div class="container-ft max-w-3xl">
+    <div class="mb-14" data-reveal>
+      <p class="eyebrow mb-3">Questions</p>
+      <h2 class="h2">Frequently asked.</h2>
+    </div>
+
+    <div class="space-y-3">
+      <div class="faq-item card" data-open="false" data-reveal>
+        <button class="faq-toggle w-full flex items-center justify-between p-6 text-left">
+          <span class="font-medium">How fast is a typical delivery?</span>
+          <i data-lucide="plus" class="faq-icon w-4 h-4 transition-transform shrink-0"></i>
+        </button>
+        <div class="faq-panel"><div class="px-6 pb-6 text-sm text-ink-muted">Most in-city deliveries complete in 25–45 minutes depending on distance and traffic. Business bulk orders are scheduled to your preferred window.</div></div>
+      </div>
+      <div class="faq-item card" data-open="false" data-reveal data-reveal-delay="1">
+        <button class="faq-toggle w-full flex items-center justify-between p-6 text-left">
+          <span class="font-medium">Which cities do you operate in?</span>
+          <i data-lucide="plus" class="faq-icon w-4 h-4 transition-transform shrink-0"></i>
+        </button>
+        <div class="faq-panel"><div class="px-6 pb-6 text-sm text-ink-muted">FastTitan is live in Lagos, Abuja, Port Harcourt, and Ibadan, with new cities added every quarter.</div></div>
+      </div>
+      <div class="faq-item card" data-open="false" data-reveal data-reveal-delay="2">
+        <button class="faq-toggle w-full flex items-center justify-between p-6 text-left">
+          <span class="font-medium">How do I become a rider?</span>
+          <i data-lucide="plus" class="faq-icon w-4 h-4 transition-transform shrink-0"></i>
+        </button>
+        <div class="faq-panel"><div class="px-6 pb-6 text-sm text-ink-muted">Apply in the app with a valid ID and bike, pass a short verification, and you can be earning within 48 hours.</div></div>
+      </div>
+      <div class="faq-item card" data-open="false" data-reveal data-reveal-delay="3">
+        <button class="faq-toggle w-full flex items-center justify-between p-6 text-left">
+          <span class="font-medium">Do you support business accounts?</span>
+          <i data-lucide="plus" class="faq-icon w-4 h-4 transition-transform shrink-0"></i>
+        </button>
+        <div class="faq-panel"><div class="px-6 pb-6 text-sm text-ink-muted">Yes — bulk scheduling, dedicated fleets, invoicing, and API access are all available on business plans.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FINAL CTA
+     ============================================================ -->
+<section class="section-pad relative overflow-hidden">
+  <div class="absolute inset-0 hero-glow"></div>
+  <div class="container-ft text-center relative" data-reveal>
+    <h2 class="h1 max-w-2xl mx-auto mb-8">Ready to move <span class="route-underline text-primary">faster?</span></h2>
+    <p class="body-lg max-w-md mx-auto mb-10">Order a delivery, download the app, ride with us, or partner your business with FastTitan.</p>
+    <div class="flex flex-wrap justify-center gap-4 mb-10">
+      <a href="#app" class="btn btn-primary">Order a delivery <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+      <a href="#rider" class="btn btn-secondary">Become a rider</a>
+      <a href="#business" class="btn btn-secondary">Partner with us</a>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <a href="#" class="store-badge">
+        <i data-lucide="apple" class="w-6 h-6"></i>
+        <span class="text-left leading-tight"><span class="block text-[10px] text-ink-muted">Download on the</span><span class="block text-sm font-semibold -mt-0.5">App Store</span></span>
+      </a>
+      <a href="#" class="store-badge">
+        <i data-lucide="play" class="w-5 h-5"></i>
+        <span class="text-left leading-tight"><span class="block text-[10px] text-ink-muted">Get it on</span><span class="block text-sm font-semibold -mt-0.5">Google Play</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="border-t border-white/[.08] pt-16 pb-10">
+  <div class="container-ft">
+    <div class="grid md:grid-cols-5 gap-10 mb-14">
+      <div class="md:col-span-2">
+        <a href="#" class="flex items-center gap-2.5 mb-5">
+          <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-soft flex items-center justify-center"><i data-lucide="zap" class="w-4 h-4 text-white"></i></span>
+          <span class="text-[1.05rem] font-semibold">FastTitan</span>
+        </a>
+        <p class="text-sm text-ink-muted max-w-xs mb-6">Logistics infrastructure for a continent that moves fast. Lagos, Abuja, Port Harcourt, Ibadan.</p>
+        <div class="flex gap-3">
+          <a href="#" class="w-9 h-9 rounded-full border border-white/[.1] flex items-center justify-center hover:bg-white/[.06] transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+          <a href="#" class="w-9 h-9 rounded-full border border-white/[.1] flex items-center justify-center hover:bg-white/[.06] transition-colors"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+          <a href="#" class="w-9 h-9 rounded-full border border-white/[.1] flex items-center justify-center hover:bg-white/[.06] transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+      <div>
+        <p class="text-sm font-medium mb-4">Services</p>
+        <ul class="space-y-3 text-sm text-ink-muted">
+          <li><a href="#food" class="hover:text-ink transition-colors">Food Delivery</a></li>
+          <li><a href="#grocery" class="hover:text-ink transition-colors">Grocery Delivery</a></li>
+          <li><a href="#parcel" class="hover:text-ink transition-colors">Parcel Delivery</a></li>
+          <li><a href="#pharmacy" class="hover:text-ink transition-colors">Pharmacy Delivery</a></li>
+          <li><a href="#documents" class="hover:text-ink transition-colors">Document Delivery</a></li>
+          <li><a href="#business" class="hover:text-ink transition-colors">Business Logistics</a></li>
+          <li><a href="/services" class="hover:text-ink transition-colors">All services →</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-sm font-medium mb-4">Company</p>
+        <ul class="space-y-3 text-sm text-ink-muted">
+          <li><a href="#about" class="hover:text-ink transition-colors">About</a></li>
+          <li><a href="#rider" class="hover:text-ink transition-colors">Careers</a></li>
+          <li><a href="#" class="hover:text-ink transition-colors">Press</a></li>
+          <li><a href="#" class="hover:text-ink transition-colors">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-sm font-medium mb-4">Legal</p>
+        <ul class="space-y-3 text-sm text-ink-muted">
+          <li><a href="#" class="hover:text-ink transition-colors">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-ink transition-colors">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-ink transition-colors">Rider Agreement</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="route-rule mb-8"></div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-ink-muted">
+      <p>© 2026 FastTitan Technologies Ltd. All rights reserved.</p>
+      <p>Made for Nigeria's cities.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.lucide) lucide.createIcons();
+
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 12);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+  const revealEls = document.querySelectorAll('[data-reveal]');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: .15, rootMargin: '0px 0px -60px 0px' });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-visible'));
+  }
+
+  const counters = document.querySelectorAll('[data-counter]');
+  const animateCounter = (el) => {
+    const target = parseFloat(el.dataset.counter);
+    const suffix = el.dataset.suffix || '';
+    const decimals = el.dataset.decimals ? parseInt(el.dataset.decimals) : 0;
+    const duration = 1400, start = performance.now();
+    const step = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = (target * eased).toFixed(decimals) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  if ('IntersectionObserver' in window) {
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { animateCounter(e.target); cio.unobserve(e.target); } });
+    }, { threshold: .5 });
+    counters.forEach(el => cio.observe(el));
+  }
+
+  document.querySelectorAll('.faq-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.dataset.open === 'true';
+      document.querySelectorAll('.faq-item').forEach(i => i.dataset.open = 'false');
+      item.dataset.open = isOpen ? 'false' : 'true';
+    });
+  });
+});
+</script>
+</body>
+</html>
